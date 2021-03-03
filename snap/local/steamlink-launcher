@@ -1,10 +1,4 @@
 #!/usr/bin/env bash
 
-if [ -d "${SNAP}/usr/lib/alsa-lib" ]; then
-  export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${SNAP}/usr/lib/alsa-lib"
-elif [ -d "${SNAP}/usr/lib/${SNAP_LAUNCHER_ARCH_TRIPLET}/alsa-lib" ]; then
-  export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${SNAP}/usr/lib/${SNAP_LAUNCHER_ARCH_TRIPLET}/alsa-lib"
-fi
-
 unset SESSION_MANAGER
 exec "$@"
