@@ -29,6 +29,7 @@ apps:
     command: bin/steamlink
     command-chain:
       - snap/command-chain/desktop-launch
+      - snap/command-chain/alsa-launch
       - bin/steamlink-launcher
     common-id: com.valvesoftware.SteamLink
     environment:
