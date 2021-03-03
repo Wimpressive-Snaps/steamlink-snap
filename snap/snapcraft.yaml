@@ -1,0 +1,168 @@
+name: steamlink
+version: '1.1.73.179'
+summary: Stream games from another computer with Steam
+description: |
+ The Steam Link app allows you to stream games from your other
+ computers. Just plug in a controller, connect to a computer
+ running Steam on the same local network, and start playing your
+ existing Steam games.
+base: core20
+grade: stable
+confinement: strict
+license: Proprietary
+architectures:
+  - build-on: amd64
+compression: lzo
+
+layout:
+  /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib:
+    bind: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib
+  /usr/share/alsa:
+    bind: $SNAP/usr/share/alsa
+  /usr/share/libdrm:
+    bind: $SNAP/usr/share/libdrm
+  /usr/share/X11:
+    bind: $SNAP/usr/share/X11
+
+apps:
+  steamlink:
+    command: bin/steamlink
+    command-chain:
+      - snap/command-chain/desktop-launch
+      - bin/steamlink-launcher
+    common-id: com.valvesoftware.SteamLink
+    environment:
+      SNAP_DESKTOP_RUNTIME: $SNAP
+      QTDIR: $SNAP/opt/qt514
+      LD_LIBRARY_PATH: $SNAP/opt/qt514/lib:$LD_LIBRARY_PATH
+      QT_PLUGIN_PATH: $SNAP/opt/qt514/plugins:$QT_PLUGIN_PATH
+      ALWAYS_USE_PULSEAUDIO: 1
+    plugs: &plugs
+      - audio-playback
+      - audio-record
+      - desktop
+      - desktop-legacy
+      - hardware-observe
+      - joystick
+      - network
+      - network-manager-observe
+      - opengl
+      - unity7
+      - wayland
+      - x11
+  eglinfo:
+    command: usr/bin/eglinfo
+    command-chain:
+      - snap/command-chain/desktop-launch
+    environment:
+      SNAP_DESKTOP_RUNTIME: $SNAP
+    plugs: *plugs
+  glxinfo:
+    command: usr/bin/glxinfo
+    command-chain:
+      - snap/command-chain/desktop-launch
+    environment:
+      SNAP_DESKTOP_RUNTIME: $SNAP
+    plugs: *plugs
+  vainfo:
+    command: usr/bin/vainfo
+    command-chain:
+      - snap/command-chain/desktop-launch
+    environment:
+      SNAP_DESKTOP_RUNTIME: $SNAP
+    plugs: *plugs
+  vdpauinfo:
+    command: usr/bin/vdpauinfo
+    command-chain:
+      - snap/command-chain/desktop-launch
+    environment:
+      SNAP_DESKTOP_RUNTIME: $SNAP
+    plugs: *plugs
+
+package-repositories:
+  - type: apt
+    ppa: flexiondotorg/qt514
+
+parts:
+  qt514:
+    plugin: make
+    source: $SNAPCRAFT_EXTENSIONS_DIR/desktop
+    source-subdir: kde-neon
+    stage-packages:
+      - qt514base
+      - qt514svg
+    prime:
+      - -opt/qt514/bin
+      - -opt/qt514/doc
+      - -opt/qt514/examples
+      - -opt/qt514/include
+      - -opt/qt514/lib/cmake
+      - -opt/qt514/lib/*.a
+      - -opt/qt514/lib/*.la
+      - -opt/qt514/lib/*.prl
+      - -opt/qt514/mkspecs
+      - -opt/qt514/lib/pkgconfig
+
+  alsa-mixin:
+    plugin: dump
+    source: https://github.com/diddlesnaps/snapcraft-alsa.git
+    source-subdir: snapcraft-assets
+    build-packages:
+      - libasound2-dev
+    stage-packages:
+      - libasound2
+      - libasound2-plugins
+
+  steamlink:
+    plugin: dump
+    source: https://repo.steampowered.com/steamlink/latest/steamlink-$SNAPCRAFT_PROJECT_VERSION.tgz
+    override-pull: |
+      snapcraftctl pull
+      # Fix file/directory permissions
+      find ${SNAPCRAFT_PART_SRC} -type d -exec chmod 755 {} \;
+      find ${SNAPCRAFT_PART_SRC} -type f -exec chmod 644 {} \;
+      chmod 755 ${SNAPCRAFT_PART_SRC}/bin/steamlink
+    stage-packages:
+      - libjpeg62
+      - libopus0
+      - libva-x11-2
+      - libvdpau1
+      - mesa-vdpau-drivers
+      # Only available for amd64
+      - try:
+        - i965-va-driver
+        - mesa-va-drivers
+
+  steamlink-launcher:
+    plugin: dump
+    source: snap/local/
+    stage-packages:
+      - mesa-utils
+      - mesa-utils-extra
+      - vainfo
+      - vdpauinfo
+    organize:
+      steamlink-launcher: bin/
+
+  cleanup:
+    plugin: nil
+    after:
+      - alsa-mixin
+      - qt514
+      - steamlink
+      - steamlink-launcher
+    override-prime: |
+      for CRUFT in \
+        usr/share/apport \
+        usr/share/bug \
+        usr/share/icons \
+        usr/share/lintian \
+        usr/share/man \
+        usr/share/pkgconfig; do
+        rm -rf ${SNAPCRAFT_PRIME}/${CRUFT}
+      done
+      find ${SNAPCRAFT_PRIME}/usr/share/doc/ -type f -not -name 'copyright' -delete || true
+      rm ${SNAPCRAFT_PRIME}/usr/share/doc/*/*.gz 2>/dev/null || true
+      rm -rf ${SNAPCRAFT_PRIME}/usr/share/doc/*/examples || true
+      rm ${SNAPCRAFT_PRIME}/usr/share/doc/*/README* 2>/dev/null || true
+      find ${SNAPCRAFT_PRIME}/usr -type d -empty -delete || true
