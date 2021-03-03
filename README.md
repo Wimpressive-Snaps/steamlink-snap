@@ -12,7 +12,12 @@
 
 ![steamlink](.github/screenshot.png?raw=true "SteamLink")
 
-<p align="center">Published for <img src="https://raw.githubusercontent.com/anythingcodes/slack-emoji-for-techies/gh-pages/emoji/tux.png" align="top" width="24" /> with 💝</p>
+<a href="https://snapcraft.io/steamlink">
+  <img alt="steamlink" src="https://snapcraft.io/steamlink/badge.svg" />
+</a>
+<a href="https://snapcraft.io/steamlink">
+  <img alt="steamlink" src="https://snapcraft.io/steamlink/trending.svg?name=0" />
+</a>
 
 ## Install
 
