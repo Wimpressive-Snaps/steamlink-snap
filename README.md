@@ -1,23 +1,22 @@
 <h1 align="center">
-  <img src="snap/gui/steamlink.png" alt="SteamLink">
+  <img src="snap/gui/steamlink.png" alt="Steam Link">
   <br />
-  SteamLink
+  Steam Link
 </h1>
 
-<p align="center"><b>This is the snap for SteamLink</b> to <i>"stream games from another computer with Steam"</i>. It works on Ubuntu, Fedora, Debian, and other major Linux distributions.</p>
+<p align="center"><b>This is the snap for Steam Link</b> to <i>"stream games from another computer with Steam"</i>. It works on Ubuntu, Fedora, Debian, and other major Linux distributions.</p>
 
 <p align="center">
-<a href="https://snapcraft.io/steamlink"><img alt="steamlink" src="https://snapcraft.io/steamlink/badge.svg" /></a>
+  <a href="https://snapcraft.io/steamlink">
+    <img alt="steamlink" src="https://snapcraft.io/steamlink/badge.svg" />
+  </a>
+  <a href="https://snapcraft.io/steamlink">
+    <img alt="steamlink" src="https://snapcraft.io/steamlink/trending.svg?name=0" />
+  </a>
 </p>
 
 ![steamlink](.github/screenshot.png?raw=true "SteamLink")
 
-<a href="https://snapcraft.io/steamlink">
-  <img alt="steamlink" src="https://snapcraft.io/steamlink/badge.svg" />
-</a>
-<a href="https://snapcraft.io/steamlink">
-  <img alt="steamlink" src="https://snapcraft.io/steamlink/trending.svg?name=0" />
-</a>
 
 ## Install
 
